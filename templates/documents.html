@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Documents</title>
+</head>
+<body>
+    <h2>My Uploaded Documents</h2>
+    <table border="1">
+        <tr>
+            <th>Original Filename</th>
+            <th>Encrypted File</th>
+            <th>Signature File</th>
+            <th>Upload Time</th>
+        </tr>
+        {% for doc in documents %}
+        <tr>
+            <td>{{ doc[0] }}</td>
+            <td><a href="{{ url_for('download_file', filename=doc[1]) }}">Download</a></td>
+            <td><a href="{{ url_for('download_file', filename=doc[2]) }}">Download</a></td>
+            <td>{{ doc[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+    <nav class="col-md-2 d-none d-md-block sidebar py-4">
+        {% include 'sidebar.html' %}
+    </nav>
+</body>
+</html>

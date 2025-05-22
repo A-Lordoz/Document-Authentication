@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>System Logs - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .sidebar {
+            min-height: 100vh;
+            background: #fff;
+            border-right: 1px solid #e3d9ce;
+        }
+        .sidebar .nav-link {
+            color: #856B50;
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            background: #e3d9ce;
+            color: #6b5741;
+        }
+        .profile-img-navbar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #856B50;
+        }
+        .username-navbar {
+            font-size: 1.1rem;
+            color: #856B50;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+            {% include 'sidebar.html' %}
+        </nav>
+        <main class="col-md-10 ms-sm-auto px-4 py-4">
+            <h2>System Logs</h2>
+            <form method="get" class="mb-3">
+                <label for="user_id">Filter by user:</label>
+                <select name="user_id" id="user_id" onchange="this.form.submit()">
+                    <option value="">All Users</option>
+                    {% for user in users %}
+                        <option value="{{ user[0] }}" {% if selected_user and user[0]|string == selected_user %}selected{% endif %}>{{ user[1] }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <table class="table table-bordered">
+                <thead><tr><th>ID</th><th>User</th><th>Profile Picture</th><th>Action</th><th>Timestamp</th></tr></thead>
+                <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log[0] }}</td>
+                        <td>{{ log[1] }}</td>
+                        <td>
+                            {% set user_photo = None %}
+                            {% for user in users %}
+                                {% if user[1] == log[1] %}
+                                    {% set user_photo = user[2] %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if user_photo %}
+                                <img src="{{ url_for('static', filename='profile_photos/' ~ user_photo) }}" alt="Profile Picture" style="width:40px; height:40px; border-radius:50%;">
+                            {% else %}
+                                <span>No photo</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ log[2] }}</td>
+                        <td>{{ log[3] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Documents - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+         .sidebar {
+            min-height: 100vh;
+            background: #fff;
+            border-right: 1px solid #e3d9ce;
+        }
+        .sidebar .nav-link {
+            color: #856B50;
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            background: #e3d9ce;
+            color: #6b5741;
+        }
+        .profile-img-navbar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #856B50;
+        }
+        .username-navbar {
+            font-size: 1.1rem;
+            color: #856B50;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+            {% include 'sidebar.html' %}
+        </nav>
+        <main class="col-md-10 ms-sm-auto px-4 py-4">
+            <h2>Manage Documents</h2>
+            <form method="post" class="mb-3">
+                <label for="user_id" class="form-label">Filter by User:</label>
+                <select name="user_id" id="user_id" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Users</option>
+                    {% for user in users %}
+                        <option value="{{ user[0] }}" {% if selected_user and user[0]|string == selected_user|string %}selected{% endif %}>{{ user[1] }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <table class="table table-bordered">
+                <thead><tr><th>ID</th><th>Filename</th><th>User</th><th>Encrypted Path</th><th>Uploaded At</th><th>Actions</th></tr></thead>
+                <tbody>
+                {% for doc in documents %}
+                    <tr>
+                        <td>{{ doc[0] }}</td>
+                        <td>{{ doc[1] }}</td>
+                        <td>{{ doc[4] if doc|length > 4 else '' }}</td>
+                        <td>{{ doc[2] }}</td>
+                        <td>{{ doc[3] }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('admin_delete_document', doc_id=doc[0]) }}" style="display:inline;">
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete document?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>
+</body>
+</html>

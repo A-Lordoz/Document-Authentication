@@ -1,0 +1,26 @@
+<div class="text-center mb-4">
+    {% if user_photo %}
+        <img src="{{ url_for('static', filename='profile_photos/' ~ user_photo) }}" class="profile-img-navbar mb-2">
+    {% else %}
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-navbar mb-2">
+    {% endif %}
+    <div class="username-navbar">{{ nickname }}</div>
+</div>
+<ul class="nav flex-column">
+    {% if session.get('is_superadmin') %}
+    <li class="nav-item"><a class="nav-link {% if request.path == '/admin_panel' %}active{% endif %}" href="/admin_panel">Dashboard</a></li>
+    {% endif %}
+    <li class="nav-item"><a class="nav-link {% if request.path == '/home' %}active{% endif %}" href="/home">My Documents</a></li>
+    <li class="nav-item"><a class="nav-link {% if request.path == '/upload' %}active{% endif %}" href="/upload">Upload Document</a></li>
+    <li class="nav-item"><a class="nav-link {% if request.path == '/verify_signature' %}active{% endif %}" href="/verify_signature">Verify Integrity</a></li>
+    <li class="nav-item"><a class="nav-link {% if request.path == '/profile' %}active{% endif %}" href="/profile">Profile</a></li>
+    {% if session.get('is_admin') %}
+        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/documents') %}active{% endif %}" href="/admin/documents">Manage Documents</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/logs') %}active{% endif %}" href="/admin/logs">System Logs</a></li>
+    {% endif %}
+    {% if session.get('is_superadmin') %}
+        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/users') %}active{% endif %}" href="/admin/users">Manage Users</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/roles') %}active{% endif %}" href="/admin/roles">Manage Roles</a></li>
+    {% endif %}
+    <li class="nav-item"><a class="nav-link text-danger" href="/logout">Logout</a></li>
+</ul>

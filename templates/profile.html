@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Document Vault{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .sidebar {
+            min-height: 100vh;
+            background: #fff;
+            border-right: 1px solid #e3d9ce;
+        }
+        .sidebar .nav-link {
+            color: #856B50;
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            background: #e3d9ce;
+            color: #6b5741;
+        }
+        .profile-img-navbar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #856B50;
+        }
+        .username-navbar {
+            font-size: 1.1rem;
+            color: #856B50;
+            font-weight: 600;
+        }
+        .table-encrypted {
+            font-family: monospace;
+            font-size: 0.95em;
+            word-break: break-all;
+            background: #f3f3f3;
+        }
+        .profile-img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #856B50;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+            {% include 'sidebar.html' %}
+        </nav>
+        <!-- Main Content -->
+        <main class="col-md-10 ms-sm-auto px-4 py-4">
+            {% block content %}
+            <h2 class="mb-4">My Profile</h2>
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nickname</label>
+                    <input type="text" class="form-control" name="nickname" value="{{ user.nickname or '' }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Profile Photo</label><br>
+                    {% if user.photo %}
+                        <img src="{{ url_for('static', filename='profile_photos/' ~ user.photo) }}" alt="Profile Photo" class="profile-img">
+                    {% endif %}
+                    <input type="file" class="form-control" name="photo">
+                </div>
+                <button type="submit" class="btn btn-custom">Update Profile</button>
+            </form>
+                <br>
+                <br>
+                <br>
+                <br>
+            <form method="post" action="{{ url_for('profile') }}">
+                <h4 class="mb-3">Change Password</h4>
+                <div class="mb-3">
+                    <label class="form-label">Old Password</label>
+                    <input type="password" class="form-control" name="old_password" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" name="new_password" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" name="confirm_password" required>
+                </div>
+                <button type="submit" name="change_password" value="1" class="btn btn-warning">Change Password</button>
+            </form>
+            {% endblock %}
+        </main>
+    </div>
+</div>
+<footer class="text-center text-muted py-3">
+    &copy; {{ 2025 }} Document Vault. All rights reserved.
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

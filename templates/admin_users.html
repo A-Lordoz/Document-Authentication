@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .sidebar {
+            min-height: 100vh;
+            background: #fff;
+            border-right: 1px solid #e3d9ce;
+        }
+        .sidebar .nav-link {
+            color: #856B50;
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            background: #e3d9ce;
+            color: #6b5741;
+        }
+        .profile-img-navbar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #856B50;
+        }
+        .username-navbar {
+            font-size: 1.1rem;
+            color: #856B50;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+            {% include 'sidebar.html' %}
+        </nav>
+        <main class="col-md-10 ms-sm-auto px-4 py-4">
+            <h2>Manage Users</h2>
+            <form method="post" class="mb-4">
+                <div class="row g-2">
+                    <div class="col"><input type="text" name="username" class="form-control" placeholder="Username" required></div>
+                    <div class="col"><input type="email" name="email" class="form-control" placeholder="Email" required></div>
+                    <div class="col"><input type="password" name="password" class="form-control" placeholder="Password" required></div>
+                    <div class="col-auto"><button class="btn btn-primary">Add User</button></div>
+                </div>
+            </form>
+            <table class="table table-bordered">
+                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Nickname</th><th>Admin</th><th>Actions</th></tr></thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                        <td>{{ user[2] }}</td>
+                        <td>{{ user[3] }}</td>
+                        <td>{{ 'Yes' if user[4] else 'No' }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('admin_delete_user', user_id=user[0]) }}" style="display:inline;">
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete user?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>
+</body>
+</html>

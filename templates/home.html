@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Vault</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .sidebar {
+            min-height: 100vh;
+            background: #fff;
+            border-right: 1px solid #e3d9ce;
+        }
+        .sidebar .nav-link {
+            color: #856B50;
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            background: #e3d9ce;
+            color: #6b5741;
+        }
+        .profile-img-navbar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #856B50;
+        }
+        .username-navbar {
+            font-size: 1.1rem;
+            color: #856B50;
+            font-weight: 600;
+        }
+        .table-encrypted {
+            font-family: monospace;
+            font-size: 0.95em;
+            word-break: break-all;
+            background: #f3f3f3;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+            {% include 'sidebar.html' %}
+        </nav>
+        <!-- Main Content -->
+        <main class="col-md-10 ms-sm-auto px-4 py-4">
+            <h2 class="mb-4">My Encrypted Documents</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Filename</th>
+                            <th>Encrypted Text</th>
+                            <th>Decrypt</th>
+                            <th>Signature</th>
+                            <th>Uploaded At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for doc in documents %}
+                        <tr>
+                            <td>{{ doc[0] }}</td>
+                            <td class="table-encrypted">
+                                {{ doc[1] }}
+                            </td>
+                            <td>
+                                <form method="post" enctype="multipart/form-data" style="display:inline;">
+                                    <input type="hidden" name="enc_path" value="{{ doc[1] }}">
+                                    <input type="file" name="aes_key" accept=".key" required>
+                                    <button type="submit" class="btn btn-sm btn-outline-primary mt-1">Decrypt</button>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('download_file', filepath=doc[2]) }}" class="btn btn-sm btn-outline-secondary">Download Signature</a>
+                            </td>
+                            <td>{{ doc[3] }}</td>
+                            <td>
+                                <form method="post" action="{{ url_for('delete_document', doc_id=doc[4]) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this document?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% if decrypted_results.get(doc[1]) %}
+                        <tr>
+                            <td colspan="6">
+                                <div class="alert alert-success mb-0">
+                                    <strong>Decrypted Content:</strong><br>
+                                    {% set result = decrypted_results[doc[1]] %}
+                                    {% if result.type == 'pdf' %}
+                                        <iframe src="{{ url_for('static', filename=result.path) }}" width="100%" height="600px"></iframe>
+                                    {% elif result.type == 'text' %}
+                                        <pre style="white-space: pre-wrap;">{{ result.text }}</pre>
+                                    {% elif result.type == 'docx' %}
+                                        <pre style="white-space: pre-wrap;">{{ result.text }}</pre>
+                                    {% elif result.type == 'error' %}
+                                        <span class="text-danger">{{ result.text }}</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

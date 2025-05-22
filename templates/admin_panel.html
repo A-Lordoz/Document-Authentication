@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --color-bg-light: #f8f9fa;
+            --color-bg-dark: #121212;
+            --color-text-light: #212529;
+            --color-text-dark: #e0e0e0;
+            --color-primary-light: #856B50;
+            --color-primary-dark: #d4b483;
+            --color-sidebar-bg-light: #fff;
+            --color-sidebar-bg-dark: #1e1e1e;
+            --color-sidebar-border-light: #e3d9ce;
+            --color-sidebar-border-dark: #3a3a3a;
+        }
+        [data-theme="light"] {
+            background-color: var(--color-bg-light);
+            color: var(--color-text-light);
+        }
+        [data-theme="light"] .sidebar {
+            background-color: var(--color-sidebar-bg-light);
+            border-right: 1px solid var(--color-sidebar-border-light);
+        }
+        [data-theme="light"] .sidebar .nav-link {
+            color: var(--color-primary-light);
+            font-weight: 500;
+        }
+        [data-theme="light"] .sidebar .nav-link.active,
+        [data-theme="light"] .sidebar .nav-link:hover {
+            background: var(--color-sidebar-border-light);
+            color: #6b5741;
+        }
+        .profile-img-navbar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid var(--color-primary-light);
+        }
+        [data-theme="light"] .username-navbar {
+            color: var(--color-primary-light);
+        }
+        [data-theme="dark"] {
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-dark);
+        }
+        [data-theme="dark"] .sidebar {
+            background-color: var(--color-sidebar-bg-dark);
+            border-right: 1px solid var(--color-sidebar-border-dark);
+        }
+        [data-theme="dark"] .sidebar .nav-link {
+            color: var(--color-primary-dark);
+            font-weight: 500;
+        }
+        [data-theme="dark"] .sidebar .nav-link.active,
+        [data-theme="dark"] .sidebar .nav-link:hover {
+            background: var(--color-sidebar-border-dark);
+            color: #d4b483;
+        }
+        [data-theme="dark"] .profile-img-navbar {
+            border: 2px solid var(--color-primary-dark);
+        }
+        [data-theme="dark"] .username-navbar {
+            color: var(--color-primary-dark);
+        }
+        body {
+            background: url('{{ url_for("static", filename="home.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        [data-theme="dark"] body {
+            background: url('{{ url_for("static", filename="black-home.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .sidebar {
+            min-height: 100vh;
+        }
+        .sidebar .nav-link {
+            transition: color 0.3s, background-color 0.3s;
+        }
+        main {
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: inherit;
+            z-index: 1050;
+        }
+        .btn-custom {
+            font-size: 1.80rem;
+            font-weight: 700;
+            font-family: 'Georgia', serif;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background-color: #4e7aa5;
+            color: #d4b483;
+        }
+        .btn-custom:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            color: #856B50;
+            background-color: #3c6186;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<button class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark theme">&#9788;</button>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+            {% include 'sidebar.html' %}
+        </nav>
+        <main class="col-md-10 ms-sm-auto px-4 py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+            <div class="row g-5 w-105 mx-auto">
+                <div class="col-md-4 d-flex justify-content-center">
+                    <a href="{{ url_for('profile') }}" class="btn btn-custom w-100 text-center">
+                        Profile
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex justify-content-center">
+                    <a href="{{ url_for('my_documents') }}" class="btn btn-custom w-100 text-center">
+                        Documents
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex justify-content-center">
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-custom w-100 text-center">
+                        Manage Users
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex justify-content-center">
+                    <a href="{{ url_for('admin_roles') }}" class="btn btn-custom w-100 text-center">
+                        Manage Roles
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex justify-content-center">
+                    <a href="{{ url_for('admin_logs') }}" class="btn btn-custom w-100 text-center">
+                        View Logs
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex justify-content-center">
+                    <a href="{{ url_for('admin_documents') }}" class="btn btn-custom w-100 text-center">
+                        Manage Documents
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script>
+    const themeToggleBtn = document.querySelector('.theme-toggle');
+    const rootElement = document.documentElement;
+    function setTheme(theme) {
+        rootElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        themeToggleBtn.textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+    themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = rootElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+    });
+    // Initialize theme on page load
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+</script>
+</body>
+</html>
